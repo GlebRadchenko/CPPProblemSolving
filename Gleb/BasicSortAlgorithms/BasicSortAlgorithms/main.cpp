@@ -9,6 +9,8 @@
 #include <iostream>
 #include <vector>
 
+#define DEBUG_MODE 0
+
 using namespace std;
 
 void print(vector<int>array) {
@@ -23,14 +25,16 @@ void print(vector<int>array) {
 #pragma mark - Get Random collection
 vector<int> randomArray() {
     vector<int>array;
-    int size = rand() % 20 + 1; // random size of array
+    int size = rand() % 20000 + 1; // random size of array
     
     for (int i = 0; i < size; ++i) {
-        int randomNumber = rand() % 50 + 1;
+        int randomNumber = rand() % size + 1;
         array.push_back(randomNumber);
     }
     cout << "Array: ";
-    print(array);
+    if (DEBUG_MODE) {
+        print(array);
+    }
     return array;
 }
 
@@ -45,7 +49,9 @@ void bubbleSort(vector<int> &array, bool ascending) {
             }
         }
     }
-    print(array);
+    if (DEBUG_MODE) {
+        print(array);
+    }
     return;
 }
 
@@ -108,11 +114,14 @@ void mergeSort(vector<int> &array, bool ascending) {
     int halfSize = (int)array.size() / 2;
     vector<int> firstHalf(array.begin(), array.begin() + halfSize);
     vector<int> secondHalf(array.begin() + halfSize, array.end());
+    
     mergeSort(firstHalf, ascending);
     mergeSort(secondHalf, ascending);
     array = customMerge(firstHalf, secondHalf, ascending);
     
-    print(array);
+    if (DEBUG_MODE) {
+        print(array);
+    }
     return;
 }
 
