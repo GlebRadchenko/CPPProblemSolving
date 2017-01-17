@@ -9,7 +9,7 @@
 #include <iostream>
 #include <vector>
 
-#define DEBUG_MODE 0
+#define DEBUG_MODE 1
 
 using namespace std;
 
@@ -25,8 +25,7 @@ void print(vector<int>array) {
 #pragma mark - Get Random collection
 vector<int> randomArray() {
     vector<int>array;
-    int size = rand() % (DEBUG_MODE ? 200 : 20) + 1; // random size of array
-    
+    int size = rand() % (DEBUG_MODE ? 30 : 200) + 1; // random size of array
     for (int i = 0; i < size; ++i) {
         int randomNumber = rand() % size + 1;
         array.push_back(randomNumber);
@@ -120,6 +119,33 @@ void mergeSort(vector<int> &array, bool ascending) {
     return;
 }
 
+#pragma mark - Quick Sort
+
+void quickSort(vector<int> &array, int left, int right) {
+    int middle = left + (right - left) / 2;
+    int pivot = array[middle];
+    
+    int i = left;
+    int j = right;
+    
+    while (i <= j) {
+        while (array[i] < pivot) { i++; }
+        while (array[j] > pivot) { j--; }
+        
+        if (i <= j) {
+            swap(array[i], array[j]);
+            i++;
+            j--;
+        }
+    }
+    
+    if (i < right) { quickSort(array, i, right); }
+    if (j > left) { quickSort(array, left, j); }
+    
+    if (DEBUG_MODE) { print(array); }
+    return;
+}
+
 int main(int argc, const char * argv[]) {
     cout << "Bubble Sort: \n";
     vector<int>random1 = randomArray();
@@ -128,6 +154,10 @@ int main(int argc, const char * argv[]) {
     cout << "Merge Sort: \n";
     vector<int>random2 = randomArray();
     mergeSort(random2, true);
+    
+    cout << "Quick Sort: \n";
+    vector<int>random3 = randomArray();
+    quickSort(random3, 0, (int)random3.size() - 1);
     
     return 0;
 }
