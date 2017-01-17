@@ -12,6 +12,7 @@
 using namespace std;
 
 void print(vector<int>array) {
+    cout << "\n";
     for (int i = 0; i < array.size(); ++i) {
         cout << array[i];
         cout << " ";
@@ -21,7 +22,7 @@ void print(vector<int>array) {
 
 #pragma mark - Get Random collection
 vector<int> randomArray() {
-    std::vector<int>array;
+    vector<int>array;
     int size = rand() % 20 + 1; // random size of array
     
     for (int i = 0; i < size; ++i) {
@@ -33,8 +34,8 @@ vector<int> randomArray() {
     return array;
 }
 
-#pragma mark - Simple implementation of Bubble Sort without optimization
-void bubbleSort(std::vector<int> &array, bool ascending) {
+#pragma mark - Bubble Sort
+void bubbleSort(vector<int> &array, bool ascending) {
     for (int i = 0; i < array.size() - 1; ++i) {
         for (int j = i + 1; j < array.size(); ++j) {
             if (i == j || array[i] == array[j]) { continue; }
@@ -48,10 +49,81 @@ void bubbleSort(std::vector<int> &array, bool ascending) {
     return;
 }
 
+#pragma mark - Merge Sort
+
+vector<int> customMerge(vector<int> first, vector<int> second, bool ascending) {
+    vector<int>result;
+    
+    int i = 0;
+    int j = 0;
+    
+    while (i < first.size() && j < second.size()) {
+        int firstElement = first[i];
+        int secondElement = second[j];
+        
+        if (firstElement == secondElement) {
+            result.push_back(firstElement);
+            result.push_back(secondElement);
+            ++i;
+            ++j;
+            continue;
+        }
+        
+        if (ascending) {
+            if (firstElement < secondElement) {
+                result.push_back(firstElement);
+                ++i;
+            } else {
+                result.push_back(secondElement);
+                ++j;
+            }
+        } else {
+            if (firstElement > secondElement) {
+                result.push_back(firstElement);
+                ++i;
+            } else {
+                result.push_back(secondElement);
+                ++j;
+            }
+        }
+    }
+    
+    if (i < first.size()) {
+        for (int k = i; k < first.size(); ++k) {
+            result.push_back(first[k]);
+        }
+    }
+    
+    if (j < second.size()) {
+        for (int k = j; k < second.size(); ++k) {
+            result.push_back(second[k]);
+        }
+    }
+    return result;
+}
+
+void mergeSort(vector<int> &array, bool ascending) {
+    if (array.size() <= 1) { return; }
+    
+    int halfSize = (int)array.size() / 2;
+    vector<int> firstHalf(array.begin(), array.begin() + halfSize);
+    vector<int> secondHalf(array.begin() + halfSize, array.end());
+    mergeSort(firstHalf, ascending);
+    mergeSort(secondHalf, ascending);
+    array = customMerge(firstHalf, secondHalf, ascending);
+    
+    print(array);
+    return;
+}
+
 int main(int argc, const char * argv[]) {
     cout << "Bubble Sort: \n";
-    vector<int>random = randomArray();
-    bubbleSort(random, true);
+    vector<int>random1 = randomArray();
+    bubbleSort(random1, true);
+    
+    cout << "Merge Sort: \n";
+    vector<int>random2 = randomArray();
+    mergeSort(random2, true);
     
     return 0;
 }
