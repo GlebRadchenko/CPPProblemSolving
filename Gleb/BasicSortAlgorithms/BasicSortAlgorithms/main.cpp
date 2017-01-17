@@ -25,16 +25,14 @@ void print(vector<int>array) {
 #pragma mark - Get Random collection
 vector<int> randomArray() {
     vector<int>array;
-    int size = rand() % 20000 + 1; // random size of array
+    int size = rand() % (DEBUG_MODE ? 200 : 20) + 1; // random size of array
     
     for (int i = 0; i < size; ++i) {
         int randomNumber = rand() % size + 1;
         array.push_back(randomNumber);
     }
     cout << "Array: ";
-    if (DEBUG_MODE) {
-        print(array);
-    }
+    if (DEBUG_MODE) { print(array); }
     return array;
 }
 
@@ -49,9 +47,7 @@ void bubbleSort(vector<int> &array, bool ascending) {
             }
         }
     }
-    if (DEBUG_MODE) {
-        print(array);
-    }
+    if (DEBUG_MODE) { print(array); }
     return;
 }
 
@@ -117,11 +113,10 @@ void mergeSort(vector<int> &array, bool ascending) {
     
     mergeSort(firstHalf, ascending);
     mergeSort(secondHalf, ascending);
+    
     array = customMerge(firstHalf, secondHalf, ascending);
     
-    if (DEBUG_MODE) {
-        print(array);
-    }
+    if (DEBUG_MODE) { print(array); }
     return;
 }
 
