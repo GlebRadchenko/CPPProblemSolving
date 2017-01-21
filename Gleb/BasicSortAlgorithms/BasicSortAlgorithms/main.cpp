@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 
 #define DEBUG_MODE 1
 
@@ -146,6 +147,114 @@ void quickSort(vector<int> &array, int left, int right) {
     return;
 }
 
+#pragma mark - Heap sort
+
+void pushToHeap(vector<int>&array, int index) {
+    while (index > 0 && array[(index - 1) / 2] < array[index]) {
+        swap(array[index], array[(index - 1) / 2]);
+        index = (index - 1) / 2;
+    }
+    return;
+}
+
+void heapify(vector<int>&array, int rootIndex, int size) {
+    if (array.size() <= 1) {
+        return;
+    }
+    
+    while (2 * rootIndex + 1 < size) {
+        int sonIndex = 2 * rootIndex + 1;
+        //detect biggest child index
+        if (2 * rootIndex + 2 < size && array[2 * rootIndex + 2] >= array[sonIndex]) {
+            sonIndex = 2 * rootIndex  + 2;
+        }
+        //if child of node is bigger than parent - swap
+        if (array[rootIndex] < array[sonIndex]) {
+            swap(array[rootIndex], array[sonIndex]);
+            rootIndex = sonIndex;
+        } else {
+            break;
+        }
+    }
+    
+    return;
+}
+
+void maxHeap(vector<int>&array, int size) {
+    
+    for (int i = size - 1; i >= 0; --i) {
+        heapify(array, i, size);
+    }
+    
+    for (int i = 0; i < size; ++i) {
+        pushToHeap(array, i);
+    }
+    return;
+}
+
+void heapSort(vector<int>&array) {
+    maxHeap(array, (int)array.size());
+    int size = (int)array.size();
+    while (size > 1) {
+        swap(array[0], array[size - 1]);
+        --size;
+        heapify(array, 0, size);
+    }
+    return;
+}
+
+#pragma mark - radix sort
+
+void countSort(vector<int>&array, int exp) {
+    map<int, vector<int>> dictionary;
+    for (int i = 0; i <= 9; i++) {
+        dictionary[i] = vector<int>();
+    }
+    vector<int>newArray;
+    for (int i = 0; i < array.size(); i++) {
+        int key = array[i] / exp % 10;
+        if (key == 0) {
+            newArray.push_back(array[i]);
+            continue;
+        }
+        dictionary[key].push_back(array[i]);
+    }
+    
+    for (int i = 0; i <= 9; i++) {
+        vector<int>sortedArray = dictionary[i];
+        for (int j = 0; j < sortedArray.size(); j++) {
+            newArray.push_back(sortedArray[j]);
+        }
+    }
+    array = newArray;
+    return;
+}
+
+int maxValue(vector<int>array) {
+    int maxValue = array[0];
+    for (int i = 1; i < array.size(); i++) {
+        maxValue = array[i] > maxValue ? array[i] : maxValue;
+    }
+    return maxValue;
+}
+
+void radixSort(vector<int>&array) {
+    if (array.size() <= 1) {
+        return;
+    }
+    int max = maxValue(array);
+    
+    int exp = 1;
+    
+    while (max / exp > 0) {
+        countSort(array, exp);
+        exp *= 10;
+    }
+    
+    return;
+}
+
+#pragma mark - Main
 int main(int argc, const char * argv[]) {
     cout << "Bubble Sort: \n";
     vector<int>random1 = randomArray();
